@@ -12,3 +12,4 @@ C:\Users\mathe\OneDrive\Documentos\Estudos\A6 - Projetos\rpg\obj\Debug\net8.0\re
 C:\Users\mathe\OneDrive\Documentos\Estudos\A6 - Projetos\rpg\obj\Debug\net8.0\rpg.pdb
 C:\Users\mathe\OneDrive\Documentos\Estudos\A6 - Projetos\rpg\obj\Debug\net8.0\rpg.genruntimeconfig.cache
 C:\Users\mathe\OneDrive\Documentos\Estudos\A6 - Projetos\rpg\obj\Debug\net8.0\ref\rpg.dll
+C:\Users\mathe\OneDrive\Documentos\Estudos\A6 - Projetos\rpg\obj\Debug\net8.0\rpg.sourcelink.json
