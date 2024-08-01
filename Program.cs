@@ -57,6 +57,7 @@ class modeloMago
     private int espacosFeiticos;
     private float experiencia;
     private int pocao;
+    private int vida;
 
     public static int Contador;
 
@@ -67,6 +68,7 @@ class modeloMago
         espacosFeiticos = 3;
         experiencia = 0f;
         pocao = 3;
+        vida = 100;
 
         Contador++;
     }
@@ -110,16 +112,59 @@ class modeloMago
 
     public void BeberPocao()
     {
-        if (pocao > 0)
+        if (pocao > 0 && vida > 0)
         {
-            Random vida = new Random();
-            float vidaMago = vida.Next(20, 50);
-            Console.WriteLine("O mago {0} bebeu uma poção e recuperou {1} pontos de vida.", nome, vidaMago);
+            Random vidaAumento = new Random();
+            int vidaMago = vidaAumento.Next(20, 50);
             pocao--;
+            vida += vidaMago;
+            if (vida > 100)
+            {
+                Console.WriteLine("Não é possível que o mago tenha mais que 100 pontos de vida");
+                vida = 100;
+            }
+            Console.WriteLine("O mago {0} bebeu uma poção e recuperou {1} pontos de vida, estejando agora com {2} pontos de vida.", nome, vidaMago, vida);
         }
-        else
+        else if (pocao <= 0)
         {
             Console.WriteLine("O mago {0} não tem poções para usar.", nome);
         }
+        else if (vida <= 0)
+        {
+            Console.WriteLine("O mago {0} está morto.", nome);
+        }
+        else
+        {
+            Console.WriteLine("Algo não funcionou no uso da poção");
+        }
+    }
+}
+
+
+class Inimigo
+{
+    public List<string> nomesInimigosNivel1;
+    public List<int> vidaInimigoNivel1;
+    public List<int> danoInimigoNivel1;
+
+    public List<string> nomesInimigosNivel2;
+    public List<int> vidaInimigoNivel2;
+    public List<int> danoInimigoNivel2;
+
+    public List<string> nomesInimigosNivel3;
+    public List<int> vidaInimigoNivel3;
+    public List<int> danoInimigoNivel3;
+
+    public List<string> nomesInimigosNivel4;
+    public List<int> vidaInimigoNivel4;
+    public List<int> danoInimigoNivel4;
+
+    public static int InimigosDerrotados;
+
+    public Inimigo()
+    {
+        nomesInimigosNivel1 = ["Porco Espinho", "Rato Atroz",  "Escorpião", "Goblin"];
+        vidaInimigoNivel1 = [20, 30, 40, 60];
+        danoInimigoNivel1 = []
     }
 }
