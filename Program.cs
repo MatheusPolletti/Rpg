@@ -50,12 +50,18 @@ for (int c = 0; c < 3; c++)
 
 modeloMago magoHistoria = new modeloMago(nomeMago, feiticosTotais);
 
-int vidaMago = magoHistoria.vida;
-while (vidaMago > 0)
+int jogar = 1;
+while (jogar == 1)
 {
+    if (magoHistoria.vida <= 0)
+    {
+        jogar = 0;
+        continue;
+    }
+
     Console.Clear();
     Console.WriteLine("Olá, mago {0}. O que você gostaria de fazer: ", nomeMago);
-    Console.WriteLine("1 - Treinar Feitiço\n2 - Meditar\n3 - Beber poção de vida\n4 - Lutar Contra um Inimigo\n5 - Fazer compra\n6 - Ver dados do mago");
+    Console.WriteLine("1 - Treinar Feitiço\n2 - Meditar\n3 - Beber poção de vida\n4 - Lutar Contra um Inimigo\n5 - Fazer compra\n6 - Ver dados do mago\n7 - Sair do jogo");
     int opcaoEscolhida = Convert.ToInt32(Console.ReadLine());
 
     switch (opcaoEscolhida)
@@ -78,16 +84,19 @@ while (vidaMago > 0)
         case 6:
             magoHistoria.Dados();
             break;
+        case 7:
+            Thread.Sleep(1000);
+            Console.Clear();
+            Console.WriteLine("Saindo do jogo...");
+
+            jogar = 0;
+            break;
         default:
             break;
     }
 
-    Thread.Sleep(4000);
-
-    vidaMago = magoHistoria.vida;
+    Thread.Sleep(3000);
 }
-
-Console.ReadKey();
 
 class modeloMago
 {
@@ -102,6 +111,7 @@ class modeloMago
     private int danoFeiticoPrincipal;
     private int danoFeiticoSecundario;
     private int danoFeiticoTerciario;
+    private int maximoVida;
 
     public static int Contador;
 
@@ -112,9 +122,11 @@ class modeloMago
 
         espacosFeiticos = 3;
         experiencia = 0f;
-        pocao = 3;
-        vida = 100;
-        dinheiro = 20;
+        pocao = 2;
+        dinheiro = 0;
+
+        maximoVida = 100;
+        vida = maximoVida;
 
         danoFeiticoPrincipal = 7;
         danoFeiticoSecundario = 4;
@@ -174,6 +186,7 @@ class modeloMago
 
     public void Meditar()
     {
+        Viajando();
         Random numero = new Random();
         int valorAumento = numero.Next(1, 3);
         espacosFeiticos += valorAumento;
@@ -183,26 +196,28 @@ class modeloMago
 
     public void Dados()
     {
-        Console.WriteLine("O mago {0} tem {1} pontos de experiência, ele possui {2} espaços de feitiços, {3} poções, {4} pontos de vida e {5} moedas de ouro.", nome, experiencia, espacosFeiticos, pocao, vida, dinheiro);
+        Console.WriteLine("O mago {0} tem {1} pontos de experiência, ele possui {2} espaços de feitiços, {3} poções, {4} pontos de vida de um máximo de {5} e {6} moedas de ouro.", nome, experiencia, espacosFeiticos, pocao, vida, maximoVida, dinheiro);
     }
 
     public void BeberPocao()
     {
-        if (pocao > 0 && vida > 0 && vida < 100)
+        if (pocao > 0 && vida > 0 && vida < maximoVida)
         {
             Random vidaAumento = new Random();
             int vidaMago = vidaAumento.Next(20, 51);
             pocao--;
             vida += vidaMago;
-            if (vida > 100)
+
+            if (vida > maximoVida)
             {
-                vida = 100;
+                vida = maximoVida;
             }
+            
             Console.WriteLine("O mago {0} bebeu uma poção e recuperou {1} pontos de vida, estejando agora com {2} pontos de vida.", nome, vidaMago, vida);
         }
-        else if (vida >= 100)
+        else if (vida >= maximoVida)
         {
-            Console.WriteLine("Não é possível que o mago tenha mais que 100 pontos de vida.");
+            Console.WriteLine("Não é possível que o mago tenha mais que {0} pontos de vida.", maximoVida);
         }
         else if (pocao <= 0)
         {
@@ -220,6 +235,7 @@ class modeloMago
 
     public void LutarInimigo()
     {
+        Viajando();
         ModeloInimigo inimigo = new ModeloInimigo();
         int inimigoAtual = inimigo.InimigoVaiLutar();
 
@@ -297,11 +313,12 @@ class modeloMago
 
     public void FazerCompras()
     {
+        Viajando();
         Console.WriteLine("Bem vindo a loja da magia grande mago! O que você gostaria de comprar?");
         Console.WriteLine("Moedas de ouro que você possui: {0}", dinheiro);
 
         Console.WriteLine("1 - Espaço de feitiço: 10 moedas\n2 - Poção de vida: 50 moedas\n3 - Poção de experiência: 250 moedas");
-        Console.WriteLine("4 - Aumentar dano do feitiço de {0}: 400 moedas\n5 - Aumentar dano do feitiço de {1}: 400 moedas\n6 - Aumentar dano do feitiço de {2}: 350 moedas", feitico[0], feitico[1], feitico[2]);
+        Console.WriteLine("4 - Aumentar dano do feitiço de {0}: 400 moedas\n5 - Aumentar dano do feitiço de {1}: 400 moedas\n6 - Aumentar dano do feitiço de {2}: 350 moedas\n7 - Aumentar 20 pontos do máximo de vida: 500 moedas", feitico[0], feitico[1], feitico[2]);
         int resposta = Convert.ToInt32(Console.ReadLine());
 
         switch (resposta)
@@ -337,7 +354,7 @@ class modeloMago
                 {
                     Console.WriteLine("Você comprou e usou uma poção de experiência");
                     Random aumentar = new Random();
-                    experiencia += aumentar.Next(30, 51);
+                    experiencia += aumentar.Next(5, 16);
                     dinheiro -= 250;
                     break;
                 }
@@ -388,10 +405,37 @@ class modeloMago
                     Console.WriteLine("Você não tem dinheiro suficiente para comprar isso.");
                     break;
                 }
+            case 7:
+                if (dinheiro >= 500)
+                {
+                    maximoVida += 20;
+                    Console.WriteLine("Você comprou o aumento do máximo de vida, agora o seu máximo é {0}.", maximoVida);
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Você não tem dinheiro suficiente para comprar isso.");
+                    break;
+                }
             default:
                 Console.WriteLine("Essa opção não existe.");
                 break;
         }
+    }
+
+    public void Viajando()
+    {
+        Thread.Sleep(2000);
+        Console.Clear();
+        Console.Write("Caminhando");
+        Thread.Sleep(1000);
+        Console.Write(".");
+        Thread.Sleep(1000);
+        Console.Write(".");
+        Thread.Sleep(1000);
+        Console.Write(".");
+        Thread.Sleep(1000);
+        Console.Clear();
     }
 }
 
@@ -404,9 +448,10 @@ class ModeloInimigo
 
     public ModeloInimigo()
     {
-        nomesInimigosNivel1 = ["Porco Espinho", "Rato Atroz", "Escorpião", "Goblin"];
-        vidaInimigoNivel1 = [20, 30, 40, 60];
-        danoInimigoNivel1 = [12, 16, 20, 24];
+        Random dano = new Random();
+        nomesInimigosNivel1 = ["Porco Espinho", "Rato Atroz", "Escorpião", "Goblin Combatente", "Besouro de Chamas", "Zumbi"];
+        vidaInimigoNivel1 = [20, 25, 30, 50, 30, 45];
+        danoInimigoNivel1 = [dano.Next(10, 16), dano.Next(5, 12), dano.Next(18, 26), dano.Next(15, 21), dano.Next(11, 18), dano.Next(15, 21)];
     }
 
     public int InimigoVaiLutar()
