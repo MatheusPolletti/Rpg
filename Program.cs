@@ -2,6 +2,19 @@
 using System.Text;
 Console.OutputEncoding = Encoding.UTF8;
 
+static int Verificar()
+{
+    try
+    {
+        int numero = Convert.ToInt32(Console.ReadLine());
+        return numero;
+    }
+    catch
+    {
+        return 0;    
+    }
+}
+
 Console.Title = "Jogo de RPG";
 
 string nomeMago = "";
@@ -62,7 +75,7 @@ while (jogar == 1)
     Console.Clear();
     Console.WriteLine("Olá, mago {0}. O que você gostaria de fazer: ", nomeMago);
     Console.WriteLine("1 - Treinar Feitiço\n2 - Meditar\n3 - Beber poção de vida\n4 - Lutar Contra um Inimigo\n5 - Fazer compra\n6 - Ver dados do mago\n7 - Sair do jogo");
-    int opcaoEscolhida = Convert.ToInt32(Console.ReadLine());
+    int opcaoEscolhida = Verificar();
 
     switch (opcaoEscolhida)
     {
@@ -92,6 +105,7 @@ while (jogar == 1)
             jogar = 0;
             break;
         default:
+            Console.WriteLine("Por favor, digite uma opção de ação válida.");
             break;
     }
 
@@ -140,7 +154,7 @@ class modeloMago
         if (espacosFeiticos > 0)
         {
             Console.WriteLine("Escolha qual feitiço você quer usar: \n1 - {0}\n2 - {1}\n3 - {2}", feitico[0], feitico[1], feitico[2]);
-            int numeroFeitico = Convert.ToInt32(Console.ReadLine());
+            int numeroFeitico = Verificador();
 
             if (numeroFeitico > 3 || numeroFeitico < 1)
             {
@@ -212,7 +226,7 @@ class modeloMago
             {
                 vida = maximoVida;
             }
-            
+
             Console.WriteLine("O mago {0} bebeu uma poção e recuperou {1} pontos de vida, estejando agora com {2} pontos de vida.", nome, vidaMago, vida);
         }
         else if (vida >= maximoVida)
@@ -423,7 +437,7 @@ class modeloMago
         }
     }
 
-    public void Viajando()
+    private void Viajando()
     {
         Thread.Sleep(2000);
         Console.Clear();
@@ -436,6 +450,19 @@ class modeloMago
         Console.Write(".");
         Thread.Sleep(1000);
         Console.Clear();
+    }
+
+    private int Verificador()
+    {
+        try
+        {
+            int numero = Convert.ToInt32(Console.ReadLine());
+            return numero;
+        }
+        catch
+        {
+            return 0;
+        }
     }
 }
 
