@@ -136,20 +136,20 @@ class modeloMago
 
     public modeloMago(string _nome, List<string> _feitico)
     {
-        nome = _nome;
-        feitico = _feitico;
+        this.nome = _nome;
+        this.feitico = _feitico;
 
-        espacosFeiticos = 3;
-        experiencia = 0f;
-        pocao = 2;
-        dinheiro = 0;
+        this.espacosFeiticos = 3;
+        this.experiencia = 0f;
+        this.pocao = 2;
+        this.dinheiro = 0;
 
-        maximoVida = 100;
-        vida = maximoVida;
+        this.maximoVida = 100;
+        this.vida = maximoVida;
 
-        danoFeiticoPrincipal = 7;
-        danoFeiticoSecundario = 4;
-        danoFeiticoTerciario = 3;
+        this.danoFeiticoPrincipal = 7;
+        this.danoFeiticoSecundario = 4;
+        this.danoFeiticoTerciario = 3;
 
         Contador++;
     }
