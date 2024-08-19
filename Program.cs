@@ -27,7 +27,7 @@ TextInfo transformarTexto = new CultureInfo("pt-br", false).TextInfo;
 while (nomeMago.Length < 7 || nomeMago.Length > 20)
 {
     Console.WriteLine("Por favor, grande mago, nos diga seu nome: ");
-    nomeMago = transformarTexto.ToTitleCase(Convert.ToString(Console.ReadLine()));
+    nomeMago = transformarTexto.ToTitleCase(Convert.ToString(Console.ReadLine()!));
 
     if (nomeMago.Length < 7)
     {
@@ -45,7 +45,7 @@ for (int c = 0; c < 3; c++)
 
     while (nomeFeiticoTemporario.Length < 2 || nomeFeiticoTemporario.Length > 14 || feiticosTotais.Contains(nomeFeiticoTemporario))
     {
-        nomeFeiticoTemporario = transformarTexto.ToTitleCase(Convert.ToString(Console.ReadLine()));
+        nomeFeiticoTemporario = transformarTexto.ToTitleCase(Convert.ToString(Console.ReadLine()!));
         if (nomeFeiticoTemporario.Length < 2 || nomeFeiticoTemporario.Length > 14)
         {
             Console.WriteLine("O nome do feitiço precisa ter entre 2 e 14 caracteres.");
@@ -57,7 +57,7 @@ for (int c = 0; c < 3; c++)
         else if (nomeMago == nomeFeiticoTemporario)
         {
             Console.WriteLine("O nome do feitiço não pode ser o mesmo que o nome do mago.");
-            nomeFeiticoTemporario = transformarTexto.ToTitleCase(Convert.ToString(Console.ReadLine()));
+            nomeFeiticoTemporario = transformarTexto.ToTitleCase(Convert.ToString(Console.ReadLine()!));
         }
     }
 
@@ -119,7 +119,7 @@ while (jogar == 1)
 
 class modeloMago
 {
-    public string? nome { get; set; }
+    public string? Nome { get; set; }
     public List<string> feitico;
     private int espacosFeiticos;
     private float experiencia;
@@ -136,7 +136,7 @@ class modeloMago
 
     public modeloMago(string _nome, List<string> _feitico)
     {
-        this.nome = _nome;
+        this.Nome = _nome;
         this.feitico = _feitico;
 
         this.espacosFeiticos = 3;
@@ -184,7 +184,7 @@ class modeloMago
 
     public void Dados()
     {
-        Console.WriteLine("O mago {0} tem {1} pontos de experiência, ele possui {2} espaços de feitiços, {3} poções, {4} pontos de vida de um máximo de {5} e {6} moedas de ouro.", nome, experiencia, espacosFeiticos, pocao, vida, maximoVida, dinheiro);
+        Console.WriteLine("O mago {0} tem {1} pontos de experiência, ele possui {2} espaços de feitiços, {3} poções, {4} pontos de vida de um máximo de {5} e {6} moedas de ouro.", Nome, experiencia, espacosFeiticos, pocao, vida, maximoVida, dinheiro);
     }
 
     public int ChamarFeitico()
@@ -203,10 +203,10 @@ class modeloMago
             {
                 if (numeroFeitico == feiticoUsado)
                 {
-                    Console.WriteLine("O mago {0} não pode usar o mesmo feitiço duas vezes seguidas.", nome);
+                    Console.WriteLine("O mago {0} não pode usar o mesmo feitiço duas vezes seguidas.", Nome);
                     return 0;
                 }
-                Console.WriteLine("O mago {0} usou o feitiço de {1}.", nome, feitico[numeroFeitico - 1]);
+                Console.WriteLine("O mago {0} usou o feitiço de {1}.", Nome, feitico[numeroFeitico - 1]);
 
                 feiticoUsado = numeroFeitico;
                 espacosFeiticos--;
@@ -230,7 +230,7 @@ class modeloMago
         }
         else
         {
-            Console.WriteLine("O mago {0} não tem espaços suficientes para usar um feitiço.", nome);
+            Console.WriteLine("O mago {0} não tem espaços suficientes para usar um feitiço.", Nome);
             return 0;
         }
         return 0;
@@ -244,7 +244,7 @@ class modeloMago
         int valorAumento = numero.Next(1, 3);
         espacosFeiticos += valorAumento;
 
-        Console.WriteLine("O mago {0} meditou por {1} horas e ganhou {2} espaços de feitiço.", nome, numero.Next(3, 6), valorAumento);
+        Console.WriteLine("O mago {0} meditou por {1} horas e ganhou {2} espaços de feitiço.", Nome, numero.Next(3, 6), valorAumento);
     }
 
     public void BeberPocao()
@@ -257,24 +257,21 @@ class modeloMago
             pocao--;
             vida += vidaMago;
 
-            if (vida > maximoVida)
+            if (vida >= maximoVida)
             {
+                Console.WriteLine("Não é possível que o mago tenha mais que {0} pontos de vida.", maximoVida);
                 vida = maximoVida;
             }
 
-            Console.WriteLine("O mago {0} bebeu uma poção e recuperou {1} pontos de vida, estejando agora com {2} pontos de vida.", nome, vidaMago, vida);
-        }
-        else if (vida >= maximoVida)
-        {
-            Console.WriteLine("Não é possível que o mago tenha mais que {0} pontos de vida.", maximoVida);
+            Console.WriteLine("O mago {0} bebeu uma poção e recuperou {1} pontos de vida, estejando agora com {2} pontos de vida.", Nome, vidaMago, vida);
         }
         else if (pocao <= 0)
         {
-            Console.WriteLine("O mago {0} não tem poções para usar.", nome);
+            Console.WriteLine("O mago {0} não tem poções para usar.", Nome);
         }
         else if (vida <= 0)
         {
-            Console.WriteLine("O mago {0} está morto.", nome);
+            Console.WriteLine("O mago {0} está morto.", Nome);
         }
         else
         {
@@ -296,6 +293,13 @@ class modeloMago
 
         while (vidaInimigo > 0)
         {
+            if (espacosFeiticos <= 0)
+            {
+                Thread.Sleep(2000);
+                Console.WriteLine("O mago {0} não tem mais feitiços e então fugiu da batalha.", Nome);
+                break;
+            }
+
             int dano = ChamarFeitico();
             if (dano <= 0)
             {
@@ -324,44 +328,49 @@ class modeloMago
                 experiencia += quantiaExperiencia;
                 dinheiro += moedaGanha;
 
-                Console.WriteLine("O mago {0} derrotou um {1} e ganhou {2} poções, {3} de experiência e {4} moedas de ouro.", nome, nomeInimigo, quantiaPocao, quantiaExperiencia, moedaGanha);
+                Console.WriteLine("O mago {0} derrotou um {1} e ganhou {2} poções, {3} de experiência e {4} moedas de ouro.", Nome, nomeInimigo, quantiaPocao, quantiaExperiencia, moedaGanha);
                 break;
             }
 
             vida -= danoInimigo;
             Console.WriteLine("O {0} usou um golpe que deu {1} de dano.", nomeInimigo, danoInimigo);
-            Console.WriteLine("Vida do mago {0}: {1}.", nome, vida);
+            Console.WriteLine("Vida do mago {0}: {1}.", Nome, vida);
 
             if (vida <= 0)
             {
-                Console.WriteLine("O mago {0} morreu na batalha contra um {1}", nome, nomeInimigo);
+                Console.WriteLine("O mago {0} morreu na batalha contra um {1}", Nome, nomeInimigo);
                 break;
             }
-            if (espacosFeiticos <= 0)
+            else if (vida <= 40 && pocao > 0)
             {
-                Console.WriteLine("O mago {0} não tem mais feitiços e então fugiu da batalha.", nome);
-                break;
-            }
-            if (vida <= 40 && pocao > 0)
-            {
-                Console.WriteLine("O mago {0} está com apenas {1} de vida, você deseja usar uma poção de vida?", nome, vida);
-                Console.WriteLine("Sim - Não");
-                string resposta = Convert.ToString(Console.ReadLine()).ToLower();
+                int continuar = 1;
 
-                if (resposta.IndexOf("s") >= 0)
+                while (continuar != 0)
                 {
-                    BeberPocao();
+                    Console.WriteLine("O mago {0} está com apenas {1} de vida, você deseja usar uma poção de vida?", Nome, vida);
+                    Console.WriteLine("Sim - Não");
+                    string resposta = Convert.ToString(Console.ReadLine()!).ToLower();
+
+                    if (resposta.IndexOf("s") >= 0)
+                    {
+                        BeberPocao();
+                        continuar = 0;
+                    }
+                    else if (resposta.IndexOf("n") >= 0)
+                    {
+                        continuar = 0;
+                    }
                 }
             }
             else if (vida <= 40 && pocao <= 0)
             {
-                Console.WriteLine("O mago {0} está com apenas {1} de vida e você não possui poções. Você deseja fugir da batalha?", nome, vida);
+                Console.WriteLine("O mago {0} está com apenas {1} de vida e você não possui poções. Você deseja fugir da batalha?", Nome, vida);
                 Console.WriteLine("Sim - Não");
-                string resposta = Convert.ToString(Console.ReadLine()).ToLower();
+                string resposta = Convert.ToString(Console.ReadLine()!).ToLower();
 
                 if (resposta.IndexOf("s") >= 0)
                 {
-                    Console.WriteLine("O mago {0} fugiu da batalha.", nome);
+                    Console.WriteLine("O mago {0} fugiu da batalha.", Nome);
                     break;
                 }
             }
@@ -374,7 +383,7 @@ class modeloMago
     public void FazerCompras()
     {
         Viajando();
-        
+
         Console.WriteLine("Bem vindo a loja da magia grande mago! O que você gostaria de comprar?");
         Console.WriteLine("Moedas de ouro que você possui: {0}", dinheiro);
 
