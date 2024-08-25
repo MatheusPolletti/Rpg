@@ -1,3 +1,3 @@
 # Rpg
  
-Simples jogo de rpg que estou desenvolvendo usando C# para aprender o básico da linguagem.
+Simples jogo de rpg que desenvolvi usando C# para aprender o básico da linguagem.
